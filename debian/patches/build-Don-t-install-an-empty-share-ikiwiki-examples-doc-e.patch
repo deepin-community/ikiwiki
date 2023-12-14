@@ -1,0 +1,28 @@
+From: Simon McVittie <smcv@debian.org>
+Date: Thu, 13 Feb 2020 09:23:42 +0000
+Subject: build: Don't install an empty share/ikiwiki/examples/doc/examples
+
+Signed-off-by: Simon McVittie <smcv@debian.org>
+Applied-upstream: 3.20200213, commit:27774812a
+---
+ Makefile.PL | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile.PL b/Makefile.PL
+index 2df9ae1..b63ee73 100755
+--- a/Makefile.PL
++++ b/Makefile.PL
+@@ -140,11 +140,11 @@ underlay_install:
+ extra_install: underlay_install
+ 	# Install example sites.
+ 	set -e; \
+-	for dir in `$(FIND) doc/examples -type d ! -regex '.*discussion.*' | $(SED) -e 's|^doc/examples/||'`; do \
++	for dir in `$(FIND) doc/examples -type d ! -regex '.*discussion.*' | $(SED) -ne 's|^doc/examples/||p'`; do \
+ 		install -d $(DESTDIR)$(PREFIX)/share/ikiwiki/examples/$$dir; \
+ 	done
+ 	set -e; \
+-	for file in `$(FIND) doc/examples -type f ! -regex '.*discussion.*' | $(SED) -e 's|^doc/examples/||'`; do \
++	for file in `$(FIND) doc/examples -type f ! -regex '.*discussion.*' | $(SED) -ne 's|^doc/examples/||p'`; do \
+ 		if ! cp -pRL doc/examples/$$file $(DESTDIR)$(PREFIX)/share/ikiwiki/examples/$$file 2>/dev/null; then \
+ 			install -m 644 doc/examples/$$file $(DESTDIR)$(PREFIX)/share/ikiwiki/examples/$$file; \
+ 		fi; \
