@@ -1,0 +1,33 @@
+#!/usr/bin/perl -i -p
+
+BEGIN {
+	$prefix=shift;
+	$ver=shift;
+	$libdir=shift;
+}
+
+if (/INSTALLDIR_AUTOREPLACE/) {
+	$_=qq{our \$installdir="\Q$prefix\E";};
+}
+elsif (/VERSION_AUTOREPLACE/) {
+	$_=qq{our \$version="\Q$ver\E";};
+}
+elsif (/^(?:use FindBin; *)?use lib/) {
+	# The idea here is to figure out if the libdir the Makefile.PL
+	# was configured to use is in perl's normal search path.
+	# If not, hard code it into ikiwiki.
+	if ((grep { $_ eq $libdir } @INC) &&
+            (! exists $ENV{PERL5LIB} || ! length $ENV{PERL5LIB} ||
+	     $ENV{PERL5LIB} ne $libdir)) {
+		$_="";
+	}
+	else {
+		$_="use lib \"\Q$libdir\E\";\n";
+	}
+}
+elsif ($. == 1 && ($ENV{NOTAINT}=0) && m{^(#!.*perl.*?)$}) {
+	$_=qq{$1 -T\n};
+}
+elsif (/^\$ENV\{PATH}="(.*)";/) {
+	$_="\$ENV{PATH}=\"\Q$1\E:\Q$prefix\E/bin\";\n";
+}
