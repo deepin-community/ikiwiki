@@ -1,0 +1,8 @@
+[[As mentioned here|support for light and dark mode]], the logo needs
+fixing for dark mode:
+
+[[!img logo/ikiwiki.png]]
+
+*— [[Jon]], 2025-02-22*
+
+[[done]].

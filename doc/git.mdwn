@@ -29,10 +29,10 @@ think about merging them. This is recommended. :-)
   Open push localization branch used for <http://l10n.ikiwiki.info/>
 * [[smcv]] `git://git.pseudorandom.co.uk/git/smcv/ikiwiki.git`
   ([browse](http://git.pseudorandom.co.uk/smcv/ikiwiki.git))
-* [[intrigeri]] `git://gaffer.ptitcanardnoir.org/ikiwiki.git`
+* [[intrigeri]] `https://gitlab.tails.boum.org/tails/ikiwiki.git`
 * [[gmcmanus]] `git://github.com/gmcmanus/ikiwiki.git`
 * [[jelmer]] `git://git.samba.org/jelmer/ikiwiki.git`
-* [[jon]] `git://github.com/jmtd/ikiwiki.git`
+* [[jon]] `https://salsa.debian.org/jmtd/ikiwiki.git`
 * [[jonas|JonasSmedegaard]] `git://source.jones.dk/ikiwiki-upstream`
 * [[arpitjain]] `git://github.com/arpitjain11/ikiwiki.git`
 * [[schmonz]] `git://github.com/schmonz/ikiwiki.git`
@@ -61,10 +61,12 @@ think about merging them. This is recommended. :-)
 * bfree `git://github.com/bfree/ikiwiki.git`
 * [[users/leg]] `git://at.magma-soft.at/ikiwiki.info`
 * [[thcipriani]] `https://github.com/thcipriani/ikiwiki.git` ([[browse|https://github.com/thcipriani/ikiwiki]])
-* [[tincho]] `git@github.com:TheTincho/ikiwiki.git` ([[browse|https://github.com/TheTincho/ikiwiki]])
+* [[Tina]] `git@github.com:NightTsarina/ikiwiki.git` ([[browse|https://github.com/NightTsarina/ikiwiki]])
 * [[hefee]] `https://salsa.debian.org/hefee/ikiwiki.git/` ([[browse|https://salsa.debian.org/hefee/ikiwiki]])
 * bsv `https://bico.media/1EZF5WfG6t35iwFpyVVptxT1MB4DKt6G2U`
   bsv blockchain repo using ([[git-remote-bsv|https://github.com/xloem/git-remote-bsv]])
+* urosm `https://git.kompot.si/urosm/ikiwiki.git`
+
 ## branches
 
 Current branches of ikiwiki are listed on [[branches]].

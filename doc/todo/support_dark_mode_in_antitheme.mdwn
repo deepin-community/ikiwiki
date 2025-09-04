@@ -1,0 +1,40 @@
+[[!tag wishlist patch]]
+[[!template id=gitbranch branch=jon/default-style-support-dark-mode author="[[Jon]]"]]
+
+Modern OSes and browsers can now report a user's preference for a "dark mode"
+setting. See <https://css-tricks.com/a-complete-guide-to-dark-mode-on-the-web/>
+for some background on technical specifics.
+
+The default IkiWiki anti-theme leaves most styling decisions up to the browser.
+Nevertheless, the anti-theme will always be rendered as Light, regardless of a
+user's preference for dark-mode, as a site's css needs to explicitly indicate
+that it *can* support dark-mode in order for it to be available.
+
+IkiWiki's anti-theme almost entirely supports dark-mode out of the box by virtue
+of delegating the style decisions to browser defaults. We should add the minimum
+required CSS to let it be enabled.
+
+(The only example of default theme which does not appear to look good in dark
+mode, in my testing, is the styling around [[RecentChanges]].)
+
+—­[[Jon]], *2022-12-12*
+
+> [[!tag reviewed]] more work is needed before this should be considered. For the
+> anti-theme, several plugins and features have CSS with hardcoded color values
+> that might not make sense in a dark mode: some are easy to fix (any `border:
+> black` can have the color spec removed; black is the default in light-mode,
+> and a better choice will be made for dark-mode) but others will require more
+> work (recentchanges and changelog force black-on-white with `!important`, and
+> before removing that I need to answer why).
+> 
+> Then we get onto the themes supplied by IkiWiki: they will need surveying since
+> they will inherit the settings from `doc/style.css`.
+> 
+> And finally we should think about the impact this would have on downstream users
+> and custom themes not supplied in IkiWiki; at the very least we would need to be
+> clear in release notes that this might be a problem, and how to avoid it.
+> 
+> — [[Jon]], *2024-02-26*
+
+>> closing ([[done]]) in favour of the approach outlined in
+>> [[support for light and dark mode]]. — [[Jon]], *2024-XX-XX*

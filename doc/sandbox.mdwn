@@ -1,14 +1,26 @@
-###Is this a heading? 
+[[Number.MAXIMUM_VALUE]]
 
-Why doesn't the following work?..
+### testing graph directive...
+
+[[!graph   src=""""
+google [ href="http://google.com/"]
+sandbox [ href=[[SandBox]] ]
+help [ href=[[ikiwiki/formatting]]]
+newpage [ href=[[NewPage]]]
+
+google -> sandbox -> help -> newpage -> help -> google;
+""""]]
+
+### Is this a heading?
+
 [[!color  foreground=white background=#ff0000 text="White text on red background"]]
 
 Sure it is.
 ===========
 
-I hope baby.
-
-Nope my friend.
+~~~
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+~~~
 
 List:
 
@@ -24,7 +36,8 @@ List:
 [[!meta date="Thu Jun 16 22:04:33 2005" updated="Thu Dec 22 01:23:20 2011"]]
 
 This is the [[SandBox]], a page anyone can edit to try out ikiwiki
-(version [[!version  ]]).
+(version [[!version  ]]). Ikiwiki described on Wikipedia: [[!wikipedia Ikiwiki]].
+
 vvvv
 CamelCase ?
 
@@ -55,7 +68,7 @@ markdown `inline` single-backquotes?
 
 - foo
 
-## two
+## two {#alt-link-name-not-working}
 
 - bar
 
@@ -257,3 +270,21 @@ I must **emphasise** this.
       cout << "secondvalue is " << secondvalue << '\n';
       return 0;
     }
+
+testeteset
+
+Install ikiwiki
+
+If you're using Debian or Ubuntu, ikiwiki is an apt-get install ikiwiki away. If you're not, see the download and install pages.
+
+You may also want to try out IkiWiki in a container.
+
+This line was added using the web interface
+> Indeed
+
+[[!table data="""
+Table|
+Wiki|Ikiwiki
+Compiler?|Yes
+Cool?|Indubitably
+"""]]

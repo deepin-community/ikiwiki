@@ -1,0 +1,191 @@
+Although my wiki is static, I'd still like all the editing functionality to be visible and link to the contributing guide page. I've achieved this by setting the cgiurl as the link to `CONTRIBUTING` on my wiki, and disabling plugins that define the `Preferences` action since there is no CGI for it to use.
+
+The only problem I encountered was that the `recentchanges` plugin doesn't have a setup option to explicitly disable using the CGI for linking to changed pages when the cgiurl is set. Below is a patch that adds a configuration option for this:
+
+```
+--- a/IkiWiki/Plugin/recentchanges.pm	1970-01-01 07:30:01.000000000 +0730
++++ b/IkiWiki/Plugin/recentchanges.pm	2024-09-03 14:13:29.351231651 +0800
+@@ -40,11 +39,19 @@
+ 			safe => 1,
+ 			rebuild => 0,
+ 		},
++		recentchangescgi => {
++			type => "boolean",
++			example => 1,
++			description => "Enable recentchanges CGI?",
++			safe => 1,
++			rebuild => 1,
++		},
+ }
+ 
+ sub checkconfig () {
+ 	$config{recentchangespage}='recentchanges' unless defined $config{recentchangespage};
+ 	$config{recentchangesnum}=100 unless defined $config{recentchangesnum};
++	$config{recentchangescgi}=1 unless defined $config{recentchangescgi};
+ }
+ 
+ sub refresh ($) {
+@@ -168,7 +175,7 @@
+ 	my $has_diffurl=0;
+ 	$change->{pages} = [
+ 		map {
+-			if (length $config{cgiurl}) {
++			if (length $config{cgiurl} && $config{recentchangescgi}) {
+ 				$_->{link} = "<a href=\"".
+ 					IkiWiki::cgiurl(
+ 						do => "goto",
+@@ -210,7 +217,7 @@
+ 		$change->{authorurl}=$change->{user};
+ 		$change->{user}=defined $change->{nickname} ? $change->{nickname} : $oiduser;
+ 	}
+-	elsif (length $config{cgiurl}) {
++	elsif (length $config{cgiurl} && $config{recentchangescgi}) {
+ 		$change->{authorurl} = IkiWiki::cgiurl(
+ 			do => "goto",
+ 			page => IkiWiki::userpage($change->{author}),
+```
+[[!tag patch]]
+
+It's probably better to add the functionality I'm looking for in the editing-related plugins like `link` and `editpage`, but I'm not that familiar with Ikiwiki internals yet. Please let me know if that's preferrable. -- [[awesomeadam]]
+
+> This feels odd to me: if you want to disable CGI (which is, effectively, what linking to CONTRIBUTING would do, no?), just disable CGI, then use the theme or something else to add a link? I have already patched ikiwiki to have recentchanges work properly without CGI, FWIW, in [[todo/proper_links_in_recentchanges_without_CGI]], have you tried that?
+>
+> see also [[plugins/sidebar]]. -- [[anarcat]]
+
+>> Yes, I've disabled the CGI before this and the recentchanges page worked as expected. The reason I want to set the cgiurl to `CONTRIBUTING` is so that the `Edit` action and all the wikilinks to nonexistent pages(the ones with '?' prepended) will be shown, since they aren't shown if the CGI is disabled. It's normally better to not show them at all when the CGI is disabled, but it would be useful to link to a contribution guide page instead if there was an option for it.
+>>
+>> I could just use the sidebar plugin instead and link to `CONTRIBUTING` from there, but then the missing pages on the wiki won't be visible from a glance... -- [[awesomeadam]]
+
+> (Let me preface this by first saying that presently I am not able to do any open
+> source work, including IkiWiki, for _reasons_ but I'm hoping that will change within the next few
+> weeks.)
+> Without looking at the code first (which might undermine my assumptions), I feel the cleanest
+> way to achieve what you want would be if it were possible for a plugin to be triggered during
+> link generation (the ? for broken links) and for that plugin to exist. I think enabling CGI
+> in any scenario where you don't want CGI is likely to have some risky corner cases. Cleaner
+> would be CGI off; a separate plugin handles dealing with ?-plugins; and anarcat's changes to
+> make recentchanges work properly with CGI off. *&mdash; [[Jon]], 2024-09-05*
+
+>> you'd need to make a copy of the `link` plugin, explicitly disable `link` and enable your
+>> copy. You'd then need to add a (renamed?) copy of `htmllink` from `IkiWiki.pm` to the copy,
+>> and call that instead, within the `linkify` subroutine.
+>> 
+>> Then, in the copy of `htmllink`, you can find the chunk of code which generates the links
+>> for missing pages (search for `"<span class=\"createlink\">`) and adjust it to be a static
+>> link to your `CONTRIBUTING` page. *— [[Jon]], 2024-09-09*
+
+>>> Thanks, here's my working [[modified link plugin|https://codeberg.org/AwesomeAdam54321/ikiplugins/src/branch/main/IkiWiki/Plugin/link_local.pm]]
+>>> based on your instructions.
+>>> Would the functionality be accepted into ikiwiki's link plugin? I could make adjustments if necessary. _— [[awesomeadam]], 2024-09-10_
+
+>>>> Nice! I think I might use this myself, too: on [my site](https://jmtd.net) I have CGI
+>>>> turned on for comments, but I don't do web-based page editing. I'll do a full review
+>>>> once I'm back at work. For now, I'd say that this works well as an independent plugin
+>>>> from `link.pm`, so it probably makes sense to keep it that way rather than modify
+>>>> `link.pm`, but I'd like to see this as a plugin included in IkiWiki. One quick hint,
+>>>> I noticed after a quick scan over: rather than copy the utility functions from
+>>>> `IkiWiki.pm`, you can reference them with e.g. `IkiWiki::abs2rel`. This wouldn't be
+>>>> necessary if we included those utility functions in the list of things that `IkiWiki.pm`
+>>>> exports, so, we should review whether to add them to that list. Also, I'd rename the
+>>>> copy of `htmllink` to something unique (`myhtmllink`? you can probably do better than
+>>>> that) and reference that name in `linkify`, to quash a warning about redefining the
+>>>> existing one. Also: in the logic immediately after generating the CONTRIBUTIONS link,
+>>>> we could actually call the real `htmllink` to handle the rest, which would remove the
+>>>> need for some of those utility functions. Great work!  *— [[Jon]], 2024-09-10*
+
+>>>> Hey Adam, I'm in a position now where I could work on this. But I want to check, are
+>>>> you interested in trying to write this? I could either write it myself, or I'd be happy
+>>>> to mentor you and review you doing it instead, if you would like to make a contribution
+>>>> to IkiWiki. Let me know! Thanks,  *— [[Jon]], 2024-10-01*
+
+>>>>> Sorry for the late reply, I'm still interested in you mentoring me writing this plugin.
+>>>>> I'll have to rework the plugin to just handle its case and call `htmllink` to handle
+>>>>> everything else(DONE). Can you review the plugin?
+>>>>> _— [[awesomeadam]], 2024-10-18_
+
+>>>>>> absolutely, happy to. I've started to look at it now, and I'll post review comments
+>>>>>> here soon. Thanks!   *— [[Jon]], 2024-10-30*
+
+----
+
+Initial notes from review of
+<https://codeberg.org/AwesomeAdam54321/ikiplugins/src/branch/main/IkiWiki/Plugin/link_local.pm>,
+commit `f2e3dc8583f82395313aa6f2cbd4f4c67430fa8f`:
+
+ * Ultimately, what we need is some commits to Ikiwiki's source repository
+   which introduce the plugin, as well as describe it in a page under
+   `doc/plugins` and probably introduce some tests under `./`. I will review
+   the plugin source in its present location, but one of us will need to
+   prepare commits for IkiWiki once it's ready.
+
+   > Sure, I could do that.
+
+ * Can you use the technique you used for `renamepage` for `is_externallink`,
+   `externallink` `scan` and `linkify`?
+
+   > These functions use $link_regexp, $email_regexp and $url_regexp which are local
+   > variables, and give errors when I use the technique.
+   > Do you know how to make it work?
+
+   >> Ah. I see the problem. In fact, `renamepage` is currently broken. The solution
+   >> for that, is to add `use IkiWiki::Plugin::link` to the top, meaning we can
+   >> reference subroutines from that plugin. However a better
+   >> approach than writing the stub `renamepage` function is to reference `link`s
+   >> directly in the hook, like this:
+   >> 
+   >> `hook(type => "renamepage"  , id => "link_local" , call => \&IkiWiki::Plugin::link::renamepage);`
+   >> 
+   >> The same can be done for `scan`, so long as you add a call to `IkiWiki::Plugin::link::checkconfig`
+   >> in your `checkconfig`. Then you can delete your local `scan` subroutine.
+   >>
+   >> That leaves you in a state where both `link` and `link_local` have a variable
+   >> `$link_regexp`. We can get rid of `link_local`s copy _if_ the one in `link.pm`
+   >> is changed from `my $link_regexp` to `our $link_regexp`: this permits accessing
+   >> the variable via `IkiWiki::Plugin::link::link_regexp`, and you can then delete
+   >> the logic to assign a value in `link_local`'s `checkconfig`.
+   >> 
+   >> That now leaves you in a situation where we need to modify `link.pm` as well as
+   >> provide `link_local.pm`. I think that's ok.
+   >>
+   >> I noticed that the `hook` calls have `id => "link"`; they need to be changed to
+   >> match the plugin name, i.e., `id => "link_local"`
+   >> 
+   >> I'd like to get rid of `is_externallink`, `externallink`, `email_regexp` and
+   >> `url_regexp` from the plugin, and just reference `link.pm`'s versions. However
+   >> I haven't got that working yet in my review.
+   >> *— [[Jon]], 2024-12-03*
+   >>
+   >> ----
+   >> 
+   >> _several hours later…_
+   >> 
+   >> Forgive my enthusiasm, but with the feedback above I've gone past reviewing and
+   >> started bikeshedding the solution. The most important thing is for it to work.
+   >> I managed to miss that the approach for `renamepage` didn't actually work until
+   >> Today. So for me I think the next thing I'd like to see is the beginning of some
+   >> tests. I would suggest a separate test file from `t/linkify.pm`; you could start
+   >> by copying it but I'd look at some other test files to see if there are more
+   >> modern approaches to structuring them (`t/linkify.pm` is probably one of the
+   >> oldest). I'd want to see every routine that's exposed by the plugin be covered
+   >> by a least one test; I think it's also worth testing to confirm that `link.pm`
+   >> and `link_local.pm` are not loaded at the same time (in my local hacking around
+   >> I've ended up with that happening, despite my test config having
+   >> `disable_plugins: [link]`.)
+   >> *— [[Jon]], 2024-12-03*
+
+ * Could `if (length $config{contribpage})` ever be false? I don't think so,
+   since `checkconfig` sets it. Can we remove that conditional?
+
+   > Yes, I've removed it.
+ 
+ * I think we should consider renaming or making more generic the notion of
+   the "contributing" page. In your case, you want the destination to be
+   CONTRIBUTING. But other users might want to point it somewhere else. I'm
+   not sure what other terminology we could use, something as simple as
+   "broken_link_destination" maybe?
+
+   > I don't know if there's a more concise general term, so I've changed it to
+   > 'broken_link_destination'.
+   _— [[awesomeadam]], 2024-11-23_
+
+*— [[Jon]], 2024-11-04*

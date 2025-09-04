@@ -1,0 +1,174 @@
+It's common now for web pages to support light and dark mode, so
+switching the OS into dark mode makes the background black and into light
+mode makes the background white. This feels to me like something lacking in
+ikiwiki's minimalistic default css.
+
+It's actually really easy to implement this with css. Just don't set any
+colors explicitly, and tell the browser to use the default color for the
+selected color scheme. The attached diff gets most of the way there though
+there will be things that need improvement.
+
+I think it probably does not make sense to apply these changes to style.css
+directly though, because it will likely break sites that start with
+style.css and then override parts of it in local.css. For example, if
+someone made their text a little bit lighter but still close to black,
+but relied on the  default white background, applying this would make their
+text almost unreadable in black mode.
+
+So, I think adding a theme that consists only of the patched css
+is probably the best way to implement this.
+--[[Joey]] 
+
+	--- /home/joey/src/ikiwiki/doc/style.css	2023-03-30 13:31:19.562667116 -0400
+	+++ style.css	2024-03-18 13:52:05.497866818 -0400
+	@@ -1,5 +1,9 @@
+	 /* ikiwiki style sheet */
+	 
+	+:root {
+	+	color-scheme: light dark;
+	+}
+	+
+	 /* Note that instead of modifying this style sheet, you can instead edit
+	  * local.css and use it to override or change settings in this one.
+	  */
+	@@ -8,6 +12,7 @@
+	 article,aside,details,figcaption,figure,
+	 footer,header,hgroup,menu,nav,section {
+	 	display: block;
+	+  	color-scheme: light dark;
+	 }
+	 
+	 div.header, header.header {
+	@@ -145,8 +150,7 @@
+	 	clear: both;
+	 	display: block;
+	 	padding: 1px 2px;
+	-	background: white !important;
+	-	color: black !important;
+	+	color-scheme: light dark;
+	 }
+	 .recentchanges .desc {
+	 	display: none;
+	@@ -219,9 +223,8 @@
+	 	margin-bottom: 4px;
+	 	margin-top: -1px;
+	 	padding: 0ex 2ex;
+	-	background: white;
+	 	border: 1px solid black;
+	-	color: black !important;
+	+  	color-scheme: light dark;
+	 }
+	 
+	 hr.poll {
+	@@ -297,8 +300,7 @@
+	 	margin-bottom: 1ex;
+	 	padding: 1ex 1ex;
+	 	border: 1px solid #aaa;
+	-	background: white;
+	-	color: black !important;
+	+  	color-scheme: light dark;
+	 }
+	 
+	 /* notebox template */
+	@@ -310,8 +312,7 @@
+	 	padding: 1ex 1ex;
+	 	border: 1px solid #aaa;
+	 	width: 25%;
+	-	background: white;
+	-	color: black !important;
+	+  	color-scheme: light dark;
+	 }
+	 
+	 /* popup template and backlinks hiding */
+
+> Hi Joey! I started to look at this issue in
+> [[support_dark_mode_in_antitheme]]. I hadn't came to the same conclusion to
+> you wrt patching it in `style.css` (or not), but I was blocked on making sure
+> every snippet of CSS from every plugin was updated, let alone every theme
+> building on top, and that's just for internal styling: like you say, it would
+> still risk breaking external themes.
+> 
+> Perhaps do as you suggest and put it in a theme, and revisit patching
+> `style.css` on the [[roadmap]] for version 4 one day. I'm happy to work on
+> that, unless you want to.
+> 
+> If we add such a theme (name TBC), would you be happy to move `ikiwiki.info`
+> to it? — [[Jon]], *2024-03-18*
+
+>> I've been poking at this a little bit more over the last couple of weeks.
+>> Besides <https://ikiwiki.info>, I'm not sure anyone would use a new
+>> "lightdark" theme. I strongly suspect most people either use an existing
+>> theme or something custom (I started a [[forum/theme poll]] to try and
+>> gather some data). So I don't think it's worth much effort _unless_
+>> <https://ikiwiki.info> was going to use it.
+>> 
+>> There's a third strand of work not mentioned here or in
+>> [[support dark mode in antitheme]]: making the other existing themes
+>> support light-and-dark mode. That could be valuable, at least in the
+>> short term.
+>>
+>>> actiontabs strikes me as a good one to support it. --[[Joey]]
+>> 
+>> I concur that adjusting the antitheme to support light/dark mode could
+>> be regarded as a breaking change for existing users. I think we should
+>> consider putting that on the [[roadmap]] for a 4.x, and/or extending
+>> [[ikiwiki-transition]] to handle this case. Perhaps a "lightdark" theme
+>> could be enabled as part of a transition if we can detect where it
+>> introduces a problem (or perhaps mechanically detecting that is impractical).
+>> — [[Jon]], *2024-04-23*
+
+[[!template id=gitbranch
+  branch=jon/lightdark-theme
+  author="[[Jon]]"
+]]
+
+>>> I completed a first cut of this last night. The changes are not fully
+>>> contained within the new theme: I've adjusted the login JavaScript to
+>>> not inject `style` attributes; adjusted three icons to work better on
+>>> a dark background, although I think the OpenID one needs further work.
+>>>
+>>> I discovered [CSS System Colors](https://developer.mozilla.org/en-US/docs/Web/CSS/system-color)
+>>> whilst working on this: they're colour specifiers which use browser-
+>>> specified values which will change when in light or dark mode. For
+>>> example `Canvas` is the background colour, and `CanvasText` the text
+>>> colour.
+>>>
+>>> The default style uses a lot of different greys which we could probably
+>>> reduce and harmonize a little bit, perhaps by using one of the System
+>>> Colors.
+>>>
+>>> I think we should expect to fold the contents of this theme into the
+>>> default stylesheet in a future IkiWiki major version.
+>>>
+>>> I've put it up as a separate branch to gather feedback if anyone wants
+>>> to take a look before I merge it.
+>>> — [[Jon]], *2024-10-08*
+>>>
+>>>> This looks great, really nice to see the `style=` bits being gone, good job! I had a small comment in https://salsa.debian.org/jmtd/ikiwiki/-/commit/1deb739c1503db7831e8bcbd534ef2d78872f454, maybe there's a screenshot missing from the branch? Can't wait to merge this in my bootstrap theme (or could i?)... --[[anarcat]]
+
+>>>>> Good catch! I hadn't taken one yet. Thanks for giving this a look over.
+>>>>> Thumbnail added and theme merged. [[done]].
+>>>>> Once we ship this in a release, I'm going to request [[Joey|users/Joey]]
+>>>>> switch <https://ikiwiki.info> over to it. One thing that will need
+>>>>> adjusting for that, though, is the ikiwiki logo: [[ikiwiki_logo|logo/ikiwiki.png]]  
+>>>>> — [[Jon]], *2024-10-09*
+
+>>>>>> I am game for switching ikiwiki.info over to it. Indeed I plan to
+>>>>>> switch a lot of little websites like that over to it.
+>>>>>>
+>>>>>> My time and attention for this is sadly limited. Thanks for doing this work.
+>>>>>> I have upgraded ikiwiki on branchable, so it should be possible to
+>>>>>> change the ikiwiki.info setup once you sort out the icon (maybe
+>>>>>> adding just a small white border would suffice), and smcv and schmonz
+>>>>>> both have the admin bit to do it. Or feel free to reach out to me by email.
+>>>>>> --[[Joey]]
+
+>>>>>>> [[anarcat]] [modified the logo to use a mid-grey](https://gitlab.com/anarcat/ikiwiki/-/blob/ec6182dfeea08dda2e8c341fe091d0ee6e22b59a/doc/logo/ikiwiki.svg) which contrasts nicely
+>>>>>>> with black and white backgrounds: [[!img 2logos.png]]. If you are happy
+>>>>>>> with that (I think it looks good) I can merge that to master and if its
+>>>>>>> easiest to update ikiwiki.info from Debian packages, I'll aim to cut a
+>>>>>>> new release in the near future.
+>>>>>>> *— [[Jon]], 2025-04-09*
+
+>>>>>>>> I've updated the logo in `master`. I'll try to resolve the PO test
+>>>>>>>> issue before cutting another release. *— [[Jon]], 2025-04-18*

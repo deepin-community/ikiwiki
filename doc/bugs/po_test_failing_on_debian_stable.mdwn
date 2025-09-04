@@ -1,0 +1,31 @@
+Building current master on debian stable:
+
+	   Failed test at t/po.t line 538.
+	#                   '<p>Tails takes <BD> hour to install</p>
+	# '
+	#     doesn't match '(?^usx:
+	#       .*
+	#       L'installation\sde\sTails\sdure\s<BD>\sheure
+	#       .*
+	# )'
+	# Looks like you failed 1 test of 126.
+	t/po.t .........................
+	Dubious, test returned 1 (wstat 256, 0x100)
+
+The failing code comes from "t/po.t: add test for UTF-8 vs. po4a 0.58+"
+
+It builds ok on debian unstable. --[[Joey]]
+
+> confirmed, specifically broken with po4a=0.69-1, works with po4a=0.73-2.
+> I'll see if I can adjust the test so it works in both cases. *— [[Jon]], 2025-04-18*
+
+> [I've written a patch to resolve this](https://salsa.debian.org/jmtd/ikiwiki/-/commit/0b933ced31ca07ddf9dfc56b3f41dd473255f869).
+> I've asked [[users/intrigeri]] if they can review it. *— [[Jon]], 2025-04-20*
+
+>> [[done]]. Thanks [[users/intrigeri]] for the review. I experimented
+>> with Debian's Salsa CI a little, and `make test` passes for current
+>> git master on both [bookworm](https://salsa.debian.org/ikiwiki-team/ikiwiki/-/jobs/7502981)
+>> and
+>> [sid](https://salsa.debian.org/ikiwiki-team/ikiwiki/-/jobs/7502850)
+>> runners. I plan to cut a new release before the Debian hard freeze.
+>> *— [[Jon]], 2025-04-28*
