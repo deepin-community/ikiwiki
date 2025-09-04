@@ -274,7 +274,7 @@ sub getsetup () {
 	},
 	html5 => {
 		type => "boolean",
-		default => 0,
+		default => 1,
 		description => "use elements new in HTML5 like <section>?",
 		advanced => 0,
 		safe => 1,
@@ -1285,11 +1285,13 @@ sub displaytime ($;$$) {
 	my $time=formattime($_[0], $_[1]);
 	if ($config{html5}) {
 		return '<time datetime="'.date_3339($_[0]).'"'.
-			($_[2] ? ' pubdate="pubdate"' : '').
+			($_[2] ? ' class="dt-published"' : '').
 			'>'.$time.'</time>';
 	}
 	else {
-		return '<span class="date">'.$time.'</span>';
+		return '<span class="date'.
+			($_[2] ? ' dt-published' : '').
+			'">'.$time.'</span>';
 	}
 }
 

@@ -1,3 +1,74 @@
+ikiwiki (3.20250501) upstream; urgency=medium
+
+  [ Antoine Beaupré ]
+  * adjust logo from black to mid-point grey so it contrasts
+    equally well on a black background to a white one.
+
+  [ Jonathan Dowland ]
+  * po4a: attempt to detect versions ≥ 0.70 and continue to
+    support earlier versions (for now), such that modern ikiwiki
+    can be built and operate on Debian stable (bookworm).
+  * actiontabs: add support for dark mode
+
+ -- Jonathan Dowland <jmtd@debian.org>  Thu, 01 May 2025 21:39:25 +0100
+
+ikiwiki (3.20250221) upstream; urgency=medium
+
+  [ Jonathan Dowland ]
+  * po.pm: fixes for po4a ≥ 0.70.
+  * CGI::printheader: optional HTTP status argument
+  * comments: return HTTP 202 for moderated comments
+  * page.tmpl: don't generate an empty parentlinks span
+  * new plugins:
+    * Jason Blevins' h1title plugin (previously external/contrib)
+    * DuckDuckGo plugin for site searching
+  * new theme: lightdark. Supports browse preferences for light or
+    dark mode.
+  * Default html5 to '1'
+  * Remove charset attribute from forms
+  * Use the HTML5 details tag for more backlinks
+
+  [ Paul Wise ]
+  * Remove extra quote character from date spans
+
+  [ intrigeri ]
+  * t/po.t: Add missing PO header
+
+  [ Antoine Beaupré ]
+  * admonitions plugin
+
+ -- Jonathan Dowland <jmtd@debian.org>  Fri, 21 Feb 2025 14:37:15 +0000
+
+ikiwiki (3.20200202.4) upstream; urgency=medium
+
+  [ Simon McVittie ]
+  * build: Don't install an empty share/ikiwiki/examples/doc/examples
+
+  [ Joey Hess ]
+  * aggregate: When a feed has an enclosure that is an image, audio, or
+    video, include the enclosure in the generated page.
+  * aggregate: Also support feeds with media:content tags.
+  * git: Pass --no-rebase when pulling, to avoid git warning messages 
+    about pull.rebase.
+
+  [ Amitai Schleier ]
+  * highlight: Adapt to API change in highlight >= 4.0
+  * Avoid 'Duplicate specification' for option "s"
+
+  [ Jonathan Dowland ]
+  * html5: Switch from pubdate=pubdate to class=dt-published
+  * mdwn: debug() which implementation is chosen
+
+  [ Antoine Beaupré ]
+  * recentchanges: support non-CGI links
+  * add geo: scheme
+  * pass PAGE variable to templates
+
+  [ intrigeri ]
+  * po: fix support for UTF-8 with po4a 0.58+
+
+ -- Jonathan Dowland <jmtd@debian.org>  Sun, 17 Mar 2024 21:03:22 +0000
+
 ikiwiki (3.20200202.3) upstream; urgency=medium
 
   [ Amitai Schleier ]

@@ -19,13 +19,6 @@ To install with [apt](http://www.debian.org/doc/manuals/debian-reference/ch02.en
 
 Or download the deb from <http://packages.debian.org/unstable/web/ikiwiki>.
 
-There is a backport of a recent version of ikiwiki for Debian 5.0 at
-<http://packages.debian.org/lenny-backports/ikiwiki>.
-
-There is also an unofficial backport of ikiwiki for Ubuntu Jaunty, provided by
-[[Paweł_Tęcza|users/ptecza]],
-at [http://gpa.net.icm.edu.pl/ubuntu/](http://gpa.net.icm.edu.pl/ubuntu/index-en.html).
-
 ## RPM packages
 
 Fedora versions 8 and newer have RPMs of ikiwiki available.
@@ -35,10 +28,16 @@ own RPM.
 
 ## BSD ports
 
-NetBSD, Mac OS X, Solaris, and many other platforms: [pkgsrc](http://www.pkgsrc.org/) has an [ikiwiki package](http://pkgsrc.se/www/ikiwiki).
+NetBSD, Mac OS X, Solaris, and many other platforms:
+[pkgsrc](http://www.pkgsrc.org/) has an [ikiwiki package](http://pkgsrc.se/www/ikiwiki).
+`make install` to build from source, or on platforms with binary packages available:
+
+        pkg_add ikiwiki
 
 FreeBSD has ikiwiki in its
-[ports collection](http://www.freshports.org/www/ikiwiki/).
+[ports collection](http://www.freshports.org/www/ikiwiki/):
+
+        pkg install -U ikiwiki
 
 ## Other packages
 
@@ -47,3 +46,7 @@ Gentoo has an [ebuild](http://bugs.gentoo.org/show_bug.cgi?id=144453) in its bug
 The [openSUSE Build Service](http://software.opensuse.org/search?baseproject=ALL&p=1&q=ikiwiki) has packages for openSUSE
 
 A [PKGBUILD for Arch Linux](https://aur.archlinux.org/packages/ikiwiki/) is in the AUR.
+
+A basic [Homebrew](https://brew.sh) Tap is available at <https://github.com/naosnz/homebrew-ikiwiki> ([[discussion|forum/Can someone add Ikiwiki in Homebrew?]])
+
+Guix has an [ikiwiki package](https://packages.guix.gnu.org/packages/ikiwiki).

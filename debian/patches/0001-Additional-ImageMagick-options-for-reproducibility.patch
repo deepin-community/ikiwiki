@@ -1,0 +1,31 @@
+From 69d39107271fe369da6d16ced28b1fdd71ed096e Mon Sep 17 00:00:00 2001
+From: Jonathan Dowland <jon@dow.land>
+Date: Mon, 25 Aug 2025 21:09:42 +0100
+Subject: [PATCH] Additional ImageMagick options for reproducibility
+
+ImageMagick 8:7.1.2.1+dfsg1-1 was generating PNGs with a date:timestamp
+tExt field despite the setting of 'png:exclude-chunk=time'. It seems
+this is no longer honoured, but explicitly setting date:timestamp to
+the value 0 seems to work.
+---
+ IkiWiki/Plugin/img.pm | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/IkiWiki/Plugin/img.pm b/IkiWiki/Plugin/img.pm
+index b85824345..ec5b462c4 100644
+--- a/IkiWiki/Plugin/img.pm
++++ b/IkiWiki/Plugin/img.pm
+@@ -184,7 +184,10 @@ sub preprocess (@) {
+ 		if ($config{deterministic}) {
+ 			$im->Set('date:create' => 0);
+ 			$im->Set('date:modify' => 0);
++			# Stopped working by ImageMagick 8:7.1.2.1+dfsg1-1
+ 			$im->Set('option'      => 'png:exclude-chunk=time');
++			# required from 8:7.1.2.1+dfsg1-1 onwards
++			$im->Set('date:timestamp' => 0);
+ 		}
+ 
+ 		if (! defined $im->Get("width") || ! defined $im->Get("height")) {
+-- 
+2.47.2
+

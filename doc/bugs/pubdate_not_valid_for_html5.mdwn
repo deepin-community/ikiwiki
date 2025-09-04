@@ -1,0 +1,13 @@
+The `pubdate` attribute is not valid for modern HTML(5).
+
+The [h-entry microformat](http://microformats.org/wiki/h-entry) describes
+an alternative way to achieve the same thing: a `dt-published` class name.
+
+Patch: <https://github.com/jmtd/ikiwiki/commit/a137103d3004cc8cec42459205684ec48af0ca11>
+[[!tag patch]]
+[[!template id=gitbranch branch=jon/html5-no-pubdate-attribute author="[[Jon]]"]]
+*—[[Jon]], 2020-10-06*
+
+> LGTM. In [[bugs/charset_attribute_on_the_script_element_is_obsolete]], I found that `itemprop="datePublished"` was another way to do this, but it seems like there is no real standard way to do this anymore, so I'm happy with anything that doesn't break validators. :) *--[[anarcat]], 2022-09-06*
+
+[[done]]. Thanks for the ACK &mdash; *[[Jon]], 2024-02-22*

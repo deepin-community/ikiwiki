@@ -11,13 +11,16 @@ use Encode;
 
 sub printheader ($) {
 	my $session=shift;
+	my $status=shift || 200;
 	
 	if (($ENV{HTTPS} && lc $ENV{HTTPS} ne "off") || $config{sslcookie}) {
 		print $session->header(-charset => 'utf-8',
+			-status => $status,
 			-cookie => $session->cookie(-httponly => 1, -secure => 1));
 	}
 	else {
 		print $session->header(-charset => 'utf-8',
+			-status => $status,
 			-cookie => $session->cookie(-httponly => 1));
 	}
 }
@@ -166,7 +169,6 @@ sub cgi_signin ($$;$) {
 	my $form = CGI::FormBuilder->new(
 		title => "signin",
 		name => "signin",
-		charset => "utf-8",
 		method => 'POST',
 		required => 'NONE',
 		javascript => 0,
@@ -245,7 +247,6 @@ sub cgi_prefs ($$) {
 		title => "preferences",
 		name => "preferences",
 		header => 0,
-		charset => "utf-8",
 		method => 'POST',
 		validate => {
 			email => 'EMAIL',

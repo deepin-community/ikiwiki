@@ -1,4 +1,4 @@
-General information
+General Information
 ===================
 
 Feel free to add your own ikiwiki site! In case you have created a custom theme consider adding it to [the theme list](http://ikiwiki.info/themes/)
@@ -52,6 +52,7 @@ Projects & Organizations
   * [Børneuniversitetet](http://support.borneuni.dk/) ([source](http://source.borneuni.dk/))
 * [CampusGrün Hamburg](http://www.campusgruen.org/)
 * The [awesome window manager homepage](http://awesome.naquadah.org/)
+* [notqmail](https://notqmail.org)
 * [vcs-home](http://vcs-home.madduck.net)
 * [Public Domain collection of Debian related tips & tricks](http://dabase.com/tips/) - please add any tips too
 * [Finnish Debian community](http://debian.fi)
@@ -107,6 +108,9 @@ Projects & Organizations
 * [[nb instrument|http://nb-instrument.com]] a workshop for beautifully handcrafted musical instruments, located in Hamburg, Germany (also one of our rather complex builds using ikiwiki only, providing CGI access for the customer)
 * [[coido architects|http://coido.de]] architectural company, located in Hamburg, Germany and Rotterdam, Netherlands (also rather complex build adding masonry and gallery scripts and some pjaxing to the picture, providing CGI access for the customer)
 * [[guppy|http://guppy.branchable.com/index.en.html]] an internationalized modular Python IRC bot
+* [[ChessWOB|https://www.chesswob.org]] Chess Without Boundaries
+* [[Debian Enhancement Proposals|https://dep-team.pages.debian.net/]]
+* [[Crypt Code Club|https://cryptcodeclub.codeberg.page/]]
 
 Personal sites and blogs
 ========================
@@ -223,3 +227,6 @@ Personal sites and blogs
 * [re:fi.64's personal wiki](https://wiki.refi64.com/)
 * [canvon's blog](https://blog.canvon.de/)
 * [Coyote Works](http://coyote.works/) - Work In Progress site of Stephen Michael Kellat
+* [cat.chessmuse.com](https://cat.chessmuse.com) - alip's chess blog
+* [wesl.ee](https://wesl.ee)'s personal wiki
+* [Summer Camp Island wiki](https://sumcamisl.neocities.org) (no CGI)
